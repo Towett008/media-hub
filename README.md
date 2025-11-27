@@ -27,4 +27,9 @@ Media sharing platform that has role based access
     - emails registry
     - 
 
-###
+### Authentication and Authorization
+Authentication - identity identification , who are you ?
+Authorizatiuon - access priviledges - role based authorization, token based authorization
+
+1. Create our custom user model
+2. Extend the intergrate form captures 
