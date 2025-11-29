@@ -11,7 +11,7 @@ from .forms import UserRegistrationForm,UserLoginForm,UserProfileForm
 def register_views(request):
     #validate if the user is already authenticated
     if request.user.is_authenticated:
-        return redirect('media_assets:dashboard')
+        return redirect('media_assests:dashboard')
     if request.method == 'POST':
          # User wantd to register
          form = UserRegistrationForm(request.POST)
@@ -20,36 +20,36 @@ def register_views(request):
              user = form.save() ## submits our user to our db
              login(request,user) ## calls the login action
              messages.success(request,f'Welcome {user.username}! Your account has been successfully created')
-             return redirect('media_assets:dashboard')
+             return redirect('media_assests:dashboard')
     else:
         form = UserRegistrationForm() # default http method here is GET
-        return render(request, 'accounts/register.html', {'form'} , form)
+    return render(request, 'accounts/register.html', {'form': form} )
     
 
  #log_in view   
 def login_views(request):
     #validate if the user is already authenticated
     if request.user.is_authenticated:
-        return redirect('media_assets:dashboard')
+        return redirect('media_assests:dashboard')
     if request.method == 'POST':
          # User wantd to register
-         form = UserLoginForm(request.POST)
+         form = UserLoginForm(request, data = request.POST)
          # if user has filled in al required inputs
          if form.is_valid():
            #pick up entries or username and password
            username = form.cleaned_data.get('username')
            password = form.cleaned_data.get('password')
            # djangomethod authenticate and login my user
-           user = authenticate(request, username=username, password=password) # queries db looiking for the user with mentioned credentials
+           user = authenticate(request, username=username, password=password) # queries db looking for the user with mentioned credentials
            if user is not None:
                login(request,user)
                messages.success(request,f'Welcome back {username}')
-               return redirect('media_assets:dashboard')
+               return redirect('media_assests:dashboard')
           
 
 
     else:
-        form = UserLoginForm() # default http method here is GET
+        form = UserLoginForm(request) # default http method here is GET
     return render(request, 'accounts/login.html', {'form':form})
 
 
@@ -83,7 +83,7 @@ class CustomPasswordResetConfirmview(PasswordResetConfirmView):
     #interface change
     template_name = 'accounts/password_reset_cofirm.html'
     success_url = reverse_lazy('accounts:password_reset_complete') # this will launch when password is update
-    
+
 
 
 

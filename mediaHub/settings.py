@@ -38,17 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
-    'media_assets',
+    'media_assests',
     'cloudinary',
 ]
 
 # register our custom user model
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'accounts.User'
 # Email backend for password reset (development)
-EMAIL_BACKEND = 'django.core.mail.backend.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Register login URL
 LOGIN_URL = 'accounts:login'
-LOGIN_REDIRECT_URL = 'media_assets:dashboard'
+LOGIN_REDIRECT_URL = 'media_assests:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 import cloudinary
