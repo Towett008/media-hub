@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import MediaAssests
+from .models import MediaAssests
 
 # Register your models here.
 @admin.register(MediaAssests)

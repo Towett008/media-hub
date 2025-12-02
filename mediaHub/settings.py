@@ -52,12 +52,15 @@ LOGIN_REDIRECT_URL = 'media_assests:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 import cloudinary
+from decouple import config
 CLOUDINARY_CONFIGS = {
-    'cloud_name' : '',
-    'api_key' : '',
-    'api_secret' : '',
+    'cloud_name' : config('CLOUDINARY_CLOUD_NAME'),
+    'api_key' : config('CLOUDINARY_API_KEY'),
+    'api_secret' : config('CLOUDINARY_API_SECRET'),
+
 }
-cloudinary.config(**CLOUDINARY_CONFIGS)
+if CLOUDINARY_CONFIGS['cloud_name']:
+    cloudinary.config(**CLOUDINARY_CONFIGS)
 
 
 

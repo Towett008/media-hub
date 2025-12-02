@@ -13,9 +13,9 @@ from .forms import MediaAssestForm
 def dashboard_view(request):
     '''main dashboard'''
     # capture all assets
-    media_list = MediaAssests.objects.filter(is_publis=True)
+    media_list = MediaAssests.objects.filter(is_public=True)
     # power search functionality for my user
-    query = request.GET('q')
+    query = request.GET.get('q') #get data from  aaform using name attribute
     if query:
         media_list = media_list.filter(
             Q(title__icontains=query) | Q(description__icontains=query)
@@ -23,10 +23,10 @@ def dashboard_view(request):
 
          )
         #content pagination
-        paginator = Paginator(media_list,12)
+    paginator = Paginator(media_list,12)
         #request template for more records
-        page_number = request.GET.get('page')
-        media_assests = paginator.get_page(page_number)
+    page_number = request.GET.get('page')
+    media_assests = paginator.get_page(page_number)
     return render (request, 'media_assests/dashboard.html',{
         'media_assests' : media_assests,
         'query' : query
@@ -37,10 +37,10 @@ def my_media_view(request):
     media_list = MediaAssests.objects.filter(uploaded_by=request.user)
     paginator = Paginator(media_list,12)
     page_number = request.GET.get('page')
-    MediaAssests = paginator.get_page(page_number)
+    media_assests = paginator.get_page(page_number)
 
-    return render(request, 'media_assets/my_media.html',{
-        'media_assets': MediaAssests
+    return render(request, 'media_assests/my_media.html',{
+        'media_assests': media_assests
     })
 @login_required
 def upload_view(request):
@@ -55,7 +55,7 @@ def upload_view(request):
             return redirect('media_assests:my_media')
     else:
         form = MediaAssestForm()
-    return render(request,'media_assets/upload_media.html',
+    return render(request,'media_assests/upload_media.html',
                     {'form' : form})
 
 @login_required
@@ -70,9 +70,56 @@ def media_detail_view(request,pk):
     media.views_count  += 1
     media.save(update_fields=['views_count'])
 
-    return render(request, 'media_assests/media_detail',{'media': media})
+      # compute permissions for template (template can't call methods with args)
+    can_edit = media.can_edit(request.user)
+    can_delete = media.can_delete(request.user)
+
+    return render(request, 'media_assests/media_detail.html' , {
+        'media' : media,
+        'can_edit': can_edit,
+        'can_delete': can_delete,
+    })
+
 
 ##edit and delete views
+@login_required
+def edit_media_view(request, pk):
+    """edit media assets based on pk"""
+    media = get_object_or_404(MediaAssests, pk=pk)
+    
+    if not media.can_edit(request.user):
+        messages.error(request, 'You cannot edit this file')
+        return redirect('media_assests:dashboard')
+    
+    if request.method == "POST":
+        form = MediaAssestForm(request.POST, request.FILES, instance=media)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Media Assets Updated successfully")
+            return redirect("media_assests:media_detail", pk=pk)
+    else:
+        form = MediaAssestForm(instance=media)  # GET request: initialize form
+
+    return render(request, 'media_assests/edit_media.html', {
+        'form': form,
+        'media': media
+    })
+  
+@login_required
+def delete_media_view(request,pk):
+    '''Delete media assets based on primary key'''
+    media = get_object_or_404(MediaAssests,pk=pk)
+    if not media.can_delete(request.user):
+        messages.error(request,"You cannot delete this media")
+        return redirect("media_assests:dashboard")
+    
+    if request.method == "POST":
+        media.delete()
+        messages.success(request,"Delete Successfully")
+        return redirect("media_assests:my_media")
+    return render(request,'media_assests/delete_media.html',{
+        'media' : media
+    })
 
 
 

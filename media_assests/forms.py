@@ -2,7 +2,7 @@ from django import forms
 from .models import MediaAssests
 
 class MediaAssestForm(forms.ModelForm):
-    class meta:
+    class Meta:
         model = MediaAssests
         fields = ('title','description', 'category','media_file','is_public')
 

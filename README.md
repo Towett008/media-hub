@@ -54,3 +54,18 @@ custompasswordresetview , custompasswordresetconfirmview - views.py
 
 2. Create other pages by simply extending the configs done on 1.
 populate what is dynamic using the block.
+
+## MVT -Model View Templates
+### Media Assests app views
+'''
+1. Dashboard view : this allows my user to see uploaded items set as public
+2. My Media : this allows users to see only their uploads
+3. Uploaded media view : this allows users upload media
+4. Edit media view : this  allolws user to edit uploaded data
+5. Delete media view : this allolws user to delete their uploaded media 
+6. Media Detail view : this allows users to see al their details for a media
+'''
+
+### Configuring our enviromental variables
+1. Create a .env file for development purposes - store your info as a variable refrence
+create a .gitignore file for github push purposes - include .env as one of the ignored files .This abstracts sensitive info from the main application code.
