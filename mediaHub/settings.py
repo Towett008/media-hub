@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 # register our custom user model
 AUTH_USER_MODEL = 'accounts.User'
 # Email backend for password reset (development)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Register login URL
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'media_assests:dashboard'
@@ -62,7 +62,17 @@ CLOUDINARY_CONFIGS = {
 if CLOUDINARY_CONFIGS['cloud_name']:
     cloudinary.config(**CLOUDINARY_CONFIGS)
 
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
+#environment configs for email sending
+EMAIL_BACKEND=os.getenv("EMAIL_BACKEND")
+EMAIL_HOST=os.getenv("EMAIL_HOST")
+EMAIL_PORT=os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS=os.getenv("EMAIL_USE_TLS") == "True"
+EMAIL_HOST_USER=os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD=os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL=os.getenv("DEFAULT_FROM_EMAIL")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
